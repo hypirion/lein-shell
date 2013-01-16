@@ -31,11 +31,12 @@ within your shell:
 
 Now, this may look rather useless as you can just omit `lein shell` and get the
 exact same result in less time. However, it may be of value if you're using
-make or ANTLR to generate files for you, needed by either javac or the
-Clojure compilation phase:
+`make` or `ANTLR` to generate files for you, needed by your Clojure project. For
+example, to automatically call `make` before running tasks, add this to your
+`project.clj` map:
 
 ```clj
-:prep-tasks ["shell make" "javac" "compile"]
+:prep-tasks [["shell" "make"]]
 ```
 
 ## License
