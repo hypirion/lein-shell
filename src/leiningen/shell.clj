@@ -11,12 +11,15 @@
         (recur (.read reader buffer))))))
 
 (defn- in-pump [reader out done?]
+  "Redirects input from this process to the input stream to the other process,
+  one byte at a time. Instead of blocking when reading, busy waits in order to
+  gracefully exit and not read other sub-processes' input."
   (loop []
     (if (.ready reader)
       (do
         (.write out (.read reader))
         (.flush out))
-      (Thread/sleep 25))
+      (Thread/sleep 10))
     (when (not @done?)
       (recur))))
 
@@ -30,17 +33,17 @@
     (with-open [out (io/reader (.getInputStream proc))
                 err (io/reader (.getErrorStream proc))
                 in (io/writer (.getOutputStream proc))]
-      (let [in-wrap (BufferedReader. *in* 1)
-            done (atom false)
+      (let [done (atom false)
             pump-out (doto (Thread. (bound-fn [] (out-pump out *out*))) .start)
             pump-err (doto (Thread. (bound-fn [] (out-pump err *err*))) .start)
-            pump-in (doto (Thread. (bound-fn [] (in-pump in-wrap in done)))
+            pump-in (doto (Thread. (bound-fn [] (in-pump *in* in done)))
                       .start)]
         (.join pump-err)
         (.join pump-err)
-        (.waitFor proc)
-        (reset! done true)
-        (.join pump-in)))))
+        (let [exit-value (.waitFor proc)]
+          (reset! done true)
+          (.join pump-in)
+          exit-value)))))
 
 (defn ^:no-project-needed shell
   "I don't do a lot."
