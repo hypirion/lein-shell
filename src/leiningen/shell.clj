@@ -13,7 +13,7 @@
 (defn- in-pump [reader out done?]
   "Redirects input from this process to the input stream to the other process,
   one byte at a time. Instead of blocking when reading, busy waits in order to
-  gracefully exit and not read other sub-processes' input."
+  gracefully exit and not read other subprocesses' input."
   (loop []
     (if (.ready reader)
       (do
@@ -46,7 +46,10 @@
           exit-value)))))
 
 (defn ^:no-project-needed shell
-  "I don't do a lot."
+  "For shelling out from Leiningen. Useful for adding stuff to prep-tasks like
+`make` or similar, which currently has no leiningen plugin.
+
+Call through `lein shell cmd arg1 arg2 ... arg_n`."
   [& args]
   (let [args (if ((some-fn map? nil?) (first args))
                (rest args)
