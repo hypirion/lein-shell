@@ -1,6 +1,23 @@
 (ns leiningen.shell
   (:require [clojure.java.io :as io]))
 
+(def ^:dynamic *dir*
+  "Directory in which to start subprocesses."
+  (System/getProperty "user.dir"))
+
+(def ^:dynamic *env*
+  "Environment map given to subprocesses."
+  nil)
+
+(defn normalize-env
+  "Normalizes a map such that it can be properly read by a Process created by
+  Runtime/getRuntime."
+  [env]
+  (->> (merge {} (System/getenv) env)
+       (filter val)
+       (map #(str (name (key %)) "=" (val %)))
+       (into-array String)))
+
 (defn- out-pump [reader out]
   (let [buffer (make-array Character/TYPE 1024)]
     (loop [len (.read reader buffer)]
@@ -26,7 +43,8 @@
   "A version of clojure.java.shell/sh that streams out/err/in to the
   subprocess."
   [cmd]
-  (let [proc (.exec (Runtime/getRuntime) (into-array cmd))]
+  (let [proc (.exec (Runtime/getRuntime) (into-array cmd)
+                    *env* (io/file *dir*))]
     (.addShutdownHook (Runtime/getRuntime)
                       (Thread. (fn [] (.destroy proc))))
     (with-open [out (io/reader (.getInputStream proc))
@@ -44,13 +62,19 @@
           (.join pump-in)
           exit-value)))))
 
+(defn- shell-with-project [project cmd]
+  (binding [*dir* (or (get-in project [:shell :dir])
+                      *dir*)
+            *env* (normalize-env (get-in project [:shell :env]))]
+    (sh cmd)))
+
 (defn ^:no-project-needed shell
   "For shelling out from Leiningen. Useful for adding stuff to prep-tasks like
 `make` or similar, which currently has no leiningen plugin.
 
 Call through `lein shell cmd arg1 arg2 ... arg_n`."
   [& args]
-  (let [args (if ((some-fn map? nil?) (first args))
-               (rest args)
-               args)]
-    (sh args)))
+  (let [[project cmd] (if ((some-fn map? nil?) (first args))
+                        [(first args) (rest args)]
+                        [nil args])]
+    (shell-with-project project cmd)))
