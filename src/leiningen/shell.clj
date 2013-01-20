@@ -1,6 +1,5 @@
 (ns leiningen.shell
-  (:require [clojure.java.io :as io])
-  (:import [java.io BufferedReader]))
+  (:require [clojure.java.io :as io]))
 
 (defn- out-pump [reader out]
   (let [buffer (make-array Character/TYPE 1024)]
