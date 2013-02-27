@@ -1,5 +1,6 @@
 (ns leiningen.shell
-  (:require [clojure.java.io :as io]))
+  (:require [clojure.java.io :as io]
+            [leiningen.core.eval :as eval]))
 
 (def ^:dynamic *dir*
   "Directory in which to start subprocesses."
@@ -62,15 +63,20 @@
           (.join pump-in)
           exit-value)))))
 
+(defn- lookup-command [project cmd]
+  (get-in project [:shell :commands cmd :os (eval/get-os)]
+          cmd))
+
 (defn- shell-with-project [project cmd]
   (binding [*dir* (or (get-in project [:shell :dir])
                       *dir*)
             *env* (normalize-env (get-in project [:shell :env]))]
-    (sh cmd)))
+    (let [cmd (lookup-command project cmd)]
+      (sh cmd))))
 
 (defn ^:no-project-needed shell
   "For shelling out from Leiningen. Useful for adding stuff to prep-tasks like
-`make` or similar, which currently has no leiningen plugin.
+`make` or similar, which currently has no Leiningen plugin.
 
 Call through `lein shell cmd arg1 arg2 ... arg_n`."
   [& args]
