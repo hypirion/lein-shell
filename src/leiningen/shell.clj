@@ -1,6 +1,7 @@
 (ns leiningen.shell
   (:require [clojure.java.io :as io]
-            [leiningen.core.eval :as eval]))
+            [leiningen.core.eval :as eval]
+            [leiningen.core.main :as main]))
 
 (def ^:dynamic *dir*
   "Directory in which to start subprocesses."
@@ -41,7 +42,8 @@
       (recur))))
 
 (defn sh
-  "A version of clojure.java.shell/sh that streams out/err/in to the
+  "A version of clojure.java.shell/sh that streams out/err/in to the subprocess
+  without performing any blocking reads. Returns the exit code of the
   subprocess."
   [cmd]
   (let [proc (.exec (Runtime/getRuntime) (into-array cmd)
@@ -76,11 +78,15 @@
 
 (defn ^:no-project-needed shell
   "For shelling out from Leiningen. Useful for adding stuff to prep-tasks like
-`make` or similar, which currently has no Leiningen plugin.
+`make` or similar, which currently has no Leiningen plugin. If the process
+returns a nonzero exit code, this command will force Leiningen to exit with the
+same exit code.
 
 Call through `lein shell cmd arg1 arg2 ... arg_n`."
   [& args]
   (let [[project cmd] (if ((some-fn map? nil?) (first args))
                         [(first args) (rest args)]
                         [nil args])]
-    (shell-with-project project cmd)))
+    (let [exit-code (shell-with-project project cmd)]
+      (if-not (zero? exit-code)
+        (main/exit exit-code)))))
