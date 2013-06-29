@@ -65,9 +65,14 @@
           (.join pump-in)
           exit-value)))))
 
-(defn- lookup-command [project cmd]
-  (get-in project [:shell :commands cmd :os (eval/get-os)]
-          cmd))
+(defn- lookup-command
+  "Looks up the first part of command, and replaces it with an os-specific
+  version if there is one."
+  [project cmd]
+  (let [command (first cmd)]
+    (if-let [os-cmd (get-in project [:shell :commands command (eval/get-os)])]
+      (cons os-cmd (rest cmd))
+      cmd)))
 
 (defn- shell-with-project [project cmd]
   (binding [*dir* (or (get-in project [:shell :dir])
