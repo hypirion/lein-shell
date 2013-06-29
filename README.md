@@ -6,13 +6,13 @@ A Leiningen plugin for calling shell commands.
 
 Use this for user-level plugins:
 
-Put `[lein-shell "0.1.0"]` into the `:plugins` vector of your
+Put `[lein-shell "0.2.0"]` into the `:plugins` vector of your
 `:user` profile, or if you are on Leiningen 1.x do `lein plugin install
-lein-shell 0.1.0`.
+lein-shell 0.2.0`.
 
 Use this for project-level plugins:
 
-Put `[lein-shell "0.1.0"]` into the `:plugins` vector of your project.clj.
+Put `[lein-shell "0.2.0"]` into the `:plugins` vector of your project.clj.
 
 It is very straightforward to use lein-shell: lein-shell will call the shell
 command with eventual parameters you include. For instance, if you want your
