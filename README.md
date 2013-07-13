@@ -51,7 +51,7 @@ such a task, a setup like this should suffice:
 ```clj
 (defproject ...
   ...
-  :prep-tasks [["shell" "foo" "arg1" "arg2"]]
+  :prep-tasks [["shell" "foo" "arg1" "arg2"] "javac" "compile" ]
   :shell {:commands {"foo" {:windows "bar"}}})
 ```
 
