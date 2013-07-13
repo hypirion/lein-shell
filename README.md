@@ -36,7 +36,7 @@ example, to automatically call `make` before running tasks, add this to your
 `project.clj` map:
 
 ```clj
-:prep-tasks [["shell" "make"]]
+:prep-tasks [["shell" "make"] "javac" "compile"]
 ```
 
 ### OS-specific subprocess call
@@ -51,7 +51,7 @@ such a task, a setup like this should suffice:
 ```clj
 (defproject ...
   ...
-  :prep-tasks [["shell" "foo" "arg1" "arg2"]]
+  :prep-tasks [["shell" "foo" "arg1" "arg2"] "javac" "compile"]
   :shell {:commands {"foo" {:windows "bar"}}})
 ```
 
