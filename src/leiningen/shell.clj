@@ -9,8 +9,12 @@
   version if there is one."
   [project cmd]
   (let [command (first cmd)]
-    (if-let [os-cmd (get-in project [:shell :commands command (eval/get-os)])]
-      (cons os-cmd (rest cmd))
+    (if-let [os (eval/get-os)
+             os-cmd (get-in project [:shell :commands command os])]
+      (do
+        (main/debug (format "[shell] Replacing command %s with %s. (os is %s)"
+                            command os-cmd os))
+        (cons os-cmd (rest cmd)))
       cmd)))
 
 (defn- shell-with-project [project cmd]
@@ -18,6 +22,7 @@
                            eval/*dir*)
             eval/*env* (get-in project [:shell :env])]
     (let [cmd (lookup-command project cmd)]
+      (main/debug "[shell] Calling the shell with" cmd)
       (apply eval/sh cmd))))
 
 (defn ^:no-project-needed shell
