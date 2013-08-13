@@ -22,7 +22,7 @@
   (get-setting-fn :dir eval/*dir*))
 
 (def ^:private get-exit-code
-  (get-setting-fn :exit-code))
+  (get-setting-fn :exit-code :default))
 
 (defn- lookup-command
   "Looks up the first part of command, and replaces it with an os-specific
@@ -60,5 +60,5 @@ Call through `lein shell cmd arg1 arg2 ... arg_n`."
       (case exit-code-action
         :ignore (main/debug (format "[shell] Ignoring exit code (is %d)"
                                     exit-code))
-        (:default nil) (if-not (zero? exit-code)
-                         (main/exit exit-code))))))
+        :default (if-not (zero? exit-code)
+                   (main/exit exit-code))))))
