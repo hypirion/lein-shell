@@ -4,15 +4,25 @@
             [leiningen.core.main :as main]
             [leiningen.core.utils :as utils]))
 
-(defn- get-environment [project [command & args]]
-  (or (get-in project [:shell :commands command :env])
-      (get-in project [:shell :env])
-      eval/*env*))
+(defmacro ^:private get-setting-fn
+  "Returns a function which returns the highest priority setting when called
+  with a project and a command. It is a macro because dynamic variables will get
+  caught and dereferenced if this was a function. :("
+  ([kw] `(get-setting-fn ~kw nil))
+  ([kw default]
+     `(fn [project# [command# & args#]]
+        (or (get-in project# [:shell :commands command# ~kw])
+            (get-in project# [:shell ~kw])
+            ~default))))
 
-(defn- get-directory [project [command & args]]
-  (or (get-in project [:shell :commands command :dir])
-      (get-in project [:shell :dir])
-      eval/*dir*))
+(def ^:private get-environment
+  (get-setting-fn :env eval/*env*))
+
+(def ^:private get-directory
+  (get-setting-fn :dir eval/*dir*))
+
+(def ^:private get-exit-code
+  (get-setting-fn :exit-code))
 
 (defn- lookup-command
   "Looks up the first part of command, and replaces it with an os-specific
@@ -36,15 +46,18 @@
 
 (defn ^:no-project-needed shell
   "For shelling out from Leiningen. Useful for adding stuff to prep-tasks like
-`make` or similar, which currently has no Leiningen plugin. If the process
-returns a nonzero exit code, this command will force Leiningen to exit with the
-same exit code.
+`make` or similar commands, which currently has no Leiningen plugin. If the
+process returns a nonzero exit code, this command will force Leiningen to exit
+with the same exit code.
 
 Call through `lein shell cmd arg1 arg2 ... arg_n`."
   [& args]
   (let [[project cmd] (if ((some-fn map? nil?) (first args))
                         [(first args) (rest args)]
                         [nil args])]
-    (let [exit-code (shell-with-project project cmd)]
-      (if-not (zero? exit-code)
-        (main/exit exit-code)))))
+    (let [exit-code (shell-with-project project cmd)
+          exit-code-action (get-exit-code project cmd)]
+      (case exit-code-action
+        :ignore nil
+        (:default nil) (if-not (zero? exit-code)
+                         (main/exit exit-code))))))
