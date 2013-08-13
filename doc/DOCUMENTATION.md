@@ -120,9 +120,37 @@ sprinkled around everywhere.
 
 ## Configuration
 
-### Environment variables and directory specification
+Generally, the default setup should suffice for most use cases. However, there
+are times when the defaults are not what you want, or where you would like to
+configure the environment or the directory you're running from. Here's how you
+would do that.
 
-printenv, pwd
+### Setting Configurations and their Priority
+
+Options are specified inside the project as follows:
+
+```clj
+(defproject ...
+  ...
+  :shell {:option1 choice
+          :option2 other-choice
+          :commands {"foo" {:option1 choice-for-foo}}})
+```
+
+Configuration options can currently be set as a default setting for all shell
+commands, or as an option for a specific shell command. Whenever a setting for a
+specific shell command is given, then the default setting is ignored. In the
+example above, all shell commands will have `option2` set to `other-choice`. The
+command `foo` will have set `option1` to `choice-for-foo`, whereas all other
+commands have `choice` set for `option1`.
+
+### Environment Variables
+
+printenv
+
+### Directory Specification
+
+pwd
 
 ### Exit codes
 
@@ -147,3 +175,6 @@ such a task, a setup like this should suffice:
 Here, `lein` will run `foo arg1 arg2` on any non-Windows system and `bar arg1
 arg2` on Windows, and this will happen before any task within this given
 project.
+
+As may be evident, this replacement option is only possible for specific
+commands, and is not something you can set in general.
