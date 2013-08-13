@@ -2,17 +2,24 @@
 
 A Leiningen plugin for calling shell commands.
 
-## Usage
+## Installation
 
-Use this for user-level plugins:
+Put `[lein-shell "0.2.0"]` into the `:plugins` vector of your `:user` profile
+inside `~/.lein/profiles.clj` if you want to use lein shell on a per user basis
+(this doesn't *really* make much sense, but you're allowed to if you want to!).
 
-Put `[lein-shell "0.2.0"]` into the `:plugins` vector of your
-`:user` profile, or if you are on Leiningen 1.x do `lein plugin install
-lein-shell 0.2.0`.
+To explicitly say that this project needs lein-shell to be built, putt
+`[lein-shell "0.2.0"]` into the `:plugins` vector of your `project.clj`. If you
+have no `:plugins` vector in your `project.clj`, it should look like this:
 
-Use this for project-level plugins:
+```clj
+(defproject your-project-here "version"
+ ...
+ :plugins [[lein-shell "0.2.0"]]
+ ...)
+```
 
-Put `[lein-shell "0.2.0"]` into the `:plugins` vector of your project.clj.
+## Quickstart
 
 It is very straightforward to use lein-shell: lein-shell will call the shell
 command with eventual parameters you include. For instance, if you want your
@@ -41,11 +48,14 @@ example, to automatically call `make` before running tasks, add this to your
 
 If the command exits with a nonzero exit code, shell will (attempt to) exit
 Leiningen with the same exit code. If wanted to, this functionality can be
-overridden, and many other settings can be modified as well. For more
-information, have a look at [the documentation][documentation]. It contains a
-lot of examples, some which may be useful to you.
+overridden, and many other settings can be modified as well.
 
-[tutorial]: https://github.com/hyPiRion/lein-shell/blob/stable/doc/DOCUMENTATION.md
+## Documentation
+
+For more information, have a look at [the documentation][documentation]. It
+contains a lot of examples, some which hopefully are useful to you.
+
+[documentation]: https://github.com/hyPiRion/lein-shell/blob/stable/doc/DOCUMENTATION.md
 
 ## License
 
