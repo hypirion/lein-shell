@@ -58,6 +58,7 @@ Call through `lein shell cmd arg1 arg2 ... arg_n`."
     (let [exit-code (shell-with-project project cmd)
           exit-code-action (get-exit-code project cmd)]
       (case exit-code-action
-        :ignore nil
+        :ignore (main/debug (format "[shell] Ignoring exit code (is %d)"
+                                    exit-code))
         (:default nil) (if-not (zero? exit-code)
                          (main/exit exit-code))))))
