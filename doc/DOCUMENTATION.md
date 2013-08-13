@@ -1,4 +1,4 @@
-# Documentation
+# Documentation for lein-shell
 
 lein-shell is a plugin for running shell commands. Sometimes, you just need to
 be able to run some sort of setup tool not available from the JVM, or which does
@@ -67,7 +67,8 @@ uberjaring, testing and repl'ing, I can do this:
 (defproject my-project "0.1.0-SNAPSHOT"
   ...
   :prep-tasks [["shell" "generator" "--in" "build/in.grammar"
-                                   "--out" "src/out.clj"]]
+                                    "--out" "src/out.clj"]
+               "javac" "compile"]
   :plugins [[lein-shell "0.2.0"]])
 ```
 
@@ -80,7 +81,17 @@ always be executed, no matter the circumstances. However, lein-shell can call
 
 #### A Word About `:prep-tasks`
 
-TODO: How does it work?
+So, what is `:prep-tasks` really? How does it work?
+
+All core tasks in Leiningen that must be run inside a project will activate
+`:prep-tasks`, which are Leiningen tasks run before the actual task you run. By
+default, `:prep-tasks` equals to `["javac" "compile"]`, but this can be
+modified. However, once you start modifying it, the default won't activate. So,
+if you're in need of `javac` and `compile`, you must put them before or after
+the modifications you've done. In the example above, the shell command may
+generate code needed for the javac task or the compile task. This is usually the
+case, but you can put the shell command at the end if you need the compiled
+java/clojure code.
 
 ### As an Alias
 
