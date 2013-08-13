@@ -180,11 +180,26 @@ Calling `lein shell pwd` would then print out
 `/home/pir/workspace/my-project/src`, and if we changed `"src"` to e.g.
 `"/home/pir"`, it would print `/home/pir` instead.
 
-### Exit codes
+### Exit Codes
 
-false
+If a shell command returns an exit code different from 0, then lein-shell will
+try to exit Leiningen with the same exit code by default. This behaviour can be
+overridden by setting the `:exit-code` option to `:ignore`. lein-shell will then
+completely ignore the exit code and continue as if it was 0. By default is this
+option set to `:default`.
 
-### OS-specific subprocess call
+As an example, see this setup below.
+
+```clj
+(defproject my-project "0.1.0-SNAPSHOT"
+  ...
+  :shell {:commands {"false" {:exit-code :ignore}}})
+```
+
+`lein shell false` will then happily return 0, whereas all other commands return
+their true exit code.
+
+### OS-Specific Subprocess Call
 
 Different operating systems may use different commands for equivalent
 functionality. When such issues arises, it would be convenient if you could
