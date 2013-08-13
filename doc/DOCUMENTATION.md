@@ -42,7 +42,6 @@ this:
       \
        \ >()_
           (__)__ _
-    
 
 lein-shell doesn't need to be run inside a project, but it is usually the
 sensible place to use it.
@@ -146,11 +145,40 @@ commands have `choice` set for `option1`.
 
 ### Environment Variables
 
-printenv
+To configure the environment variables, you set `:env` to a map with the
+environment variables you want to set. The default value is `{}`.
+
+As an example, let's see how we can change the default java command, `JAVA_CMD`:
+
+```clj
+(defproject ...
+  ...
+  :shell {:env {"JAVA_CMD" "java42"})
+```
+
+We can see that it's working by using `printenv`. `printenv JAVA_CMD` usually
+prints out `java` or nothing, but `lein shell printenv JAVA_CMD` should now
+print out `java42`.
 
 ### Directory Specification
 
-pwd
+To configure the working directory (which directory you're calling the command
+from), set the `:dir` to a string which specifies the directory to work from.
+The default value is the root directory of the project. The directory can be set
+relative to the root directory of the project.
+
+As an example, see the setup below.
+
+```clj
+(defproject my-project "0.1.0-SNAPSHOT"
+  ...
+  :shell {:dir "src"})
+```
+
+Assume that the project is placed within `/home/pir/workspace/my-project`.
+Calling `lein shell pwd` would then print out
+`/home/pir/workspace/my-project/src`, and if we changed `"src"` to e.g.
+`"/home/pir"`, it would print `/home/pir` instead.
 
 ### Exit codes
 
