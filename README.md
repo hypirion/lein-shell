@@ -39,25 +39,13 @@ example, to automatically call `make` before running tasks, add this to your
 :prep-tasks [["shell" "make"] "javac" "compile"]
 ```
 
-### OS-specific subprocess call
+If the command exits with a nonzero exit code, shell will (attempt to) exit
+Leiningen with the same exit code. If wanted to, this functionality can be
+overridden, and many other settings can be modified as well. For more
+information, have a look at [the documentation][documentation]. It contains a
+lot of examples, some which may be useful to you.
 
-Different operating systems may use different commands for equivalent
-functionality. When such issues arises, it would be convenient if you could
-somehow specify this. This is possible with lein-shell: Say you have a command
-named `foo` in Linux, but `bar` in Windows, and you want to run this command as
-a prepared task before compiling and similar. To enable auto-preparation for
-such a task, a setup like this should suffice:
-
-```clj
-(defproject ...
-  ...
-  :prep-tasks [["shell" "foo" "arg1" "arg2"] "javac" "compile"]
-  :shell {:commands {"foo" {:windows "bar"}}})
-```
-
-Here, `lein` will run `foo arg1 arg2` on any non-Windows system and `bar arg1
-arg2` on Windows, and this will happen before any task within this given
-project.
+[tutorial]: https://github.com/hyPiRion/lein-shell/blob/stable/doc/DOCUMENTATION.md
 
 ## License
 
