@@ -1,6 +1,7 @@
 # lein-shell
 
-A Leiningen plugin for calling shell commands.
+A Leiningen plugin for calling shell commands. lein-shell is an active, stable
+project.
 
 ## Installation
 
