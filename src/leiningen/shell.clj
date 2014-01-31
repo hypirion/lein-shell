@@ -36,7 +36,8 @@
   [project cmd]
   (let [command (first cmd)
         os (eval/get-os)]
-    (if-let [os-cmd (get-in project [:shell :commands command os])]
+    (if-let [os-cmd (or (get-in project [:shell :commands command os])
+                        (get-in project [:shell :commands command :default-command]))]
       (do
         (main/debug (format "[shell] Replacing command %s with %s. (os is %s)"
                             command os-cmd os))
