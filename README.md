@@ -60,6 +60,6 @@ contains a lot of examples, some which hopefully are useful to you.
 
 ## License
 
-Copyright © 2013 Jean Niklas L'orange
+Copyright © 2013-2014 Jean Niklas L'orange
 
 Distributed under the Eclipse Public License, the same as Clojure.
