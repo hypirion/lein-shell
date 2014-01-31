@@ -1,4 +1,4 @@
-(defproject lein-shell "0.4.0-SNAPSHOT"
+(defproject lein-shell "0.4.0"
   :description "Call shell from within Leiningen."
   :url "http://www.github.com/hyPiRion/lein-shell"
   :license {:name "Eclipse Public License"
