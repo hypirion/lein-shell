@@ -223,4 +223,36 @@ As may be evident, this replacement option is only possible for specific
 commands, and is not something you can set in general.
 
 The (currently) different detectable oses are `:freebsd`, `:linux`, `:macosx`,
-`:openbsd`, `:solaris` and `:windows`.
+`:openbsd`, `:solaris` and `:windows`, but this may automatically increase with
+newer leiningen releases.
+
+### Default-command and aliasing
+
+In addition to the the OS-specific subprocess commands, you can also use
+`:default-command` as a catch-all. This may seem pointless, as you can just
+change the default command call instead. However, this functionality makes it
+possible to make aliases for a single command.
+
+Why are aliases valuable? Mainly because you may want to specify different
+command options for different invokations. Maybe you want to run the same
+command in different default directories, or maybe you want the same command to
+call different os-specific subcalls for some reason or another.
+
+Here, for example, we alias `echo` to `true`, in order to silence the output
+from `echo`. Additionally, we add the alias `shout` to `echo`, regardless of the
+original silencing.
+
+```clj
+(defproject my-project "0.1.0-SNAPSHOT"
+  ...
+  :shell {:commands {"echo" {:default-command "true"}
+                     "shout" {:default-command "echo"
+                              :env {"DEBUG" "t"}}}})
+```
+
+Now, calling `lein shell echo foo` will do nothing, whereas `lein shell shout
+foo` will print out `foo` as expected, with the `DEBUG` variable set in its
+environment.
+
+Note that the `:default-command` will only override calls from lein-shell in
+this project, and will not apply these aliases for anything else.
