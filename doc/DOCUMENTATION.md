@@ -291,3 +291,17 @@ following `project.clj` setup:
 
 Now, the `lein shell echo ...` won't even attempt to read from stdin in this
 specific project.
+
+#### Multiple stdin consumers
+
+As mentioned earlier, lein-shell is unable to detect whether the command needs
+input from stdin. This also means that lein-shell is unable to detect how much
+the specific command needs. When performing multiple shell commands in the same
+lein invocation, data **may** be sent to the wrong command. I would argue that
+it's generally safe for multiple commands to read input from e.g. a keyboard,
+but dangerous to read from a pipe. Timing is the issue: If you know that the
+first command has finished before data to the second command comes through
+stdin, things will be safe.
+
+I have not considered to find a solution for this specific problem, but if there
+is a desire to have this solved, please ask by requesting it in an issue.
