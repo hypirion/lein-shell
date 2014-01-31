@@ -256,3 +256,38 @@ environment.
 
 Note that the `:default-command` will only override calls from lein-shell in
 this project, and will not apply these aliases for anything else.
+
+### Ignoring stdin
+
+The fact that the JVM is not equivalent with a shell language may confuse some.
+If we send in some input, to which command is it sent to? By default, lein-shell
+detects and sends input to the first command able to receive it. This means
+that, if we've made a `cat` function in Clojure
+
+```bash
+echo 'foo' | lein do shell echo 'bar', run
+# can be
+(echo 'foo' | echo 'bar') && cat
+# which only prints out bar
+
+# but it can also be
+echo 'foo' | (echo 'bar' && cat)
+# which prints out foo, followed by bar on a new line
+```
+
+The functionality is in a race condition, because the input to lein-shell can
+come after `shell echo 'bar'` has run, but also before.
+
+How do we solve this? Well, we as users of lein-shell knows that the command
+`echo` doesn't use stdin data at all, and simply ignores it. This doesn't
+lein-shell know, but we can tell it to not send stdin data to `echo` through the
+following `project.clj` setup:
+
+```clj
+(defproject my-project "0.1.0-SNAPSHOT"
+  ...
+  :shell {:commands {"echo" {:use-stdin? false}}})
+```
+
+Now, the `lein shell echo ...` won't even attempt to read from stdin in this
+specific project.
