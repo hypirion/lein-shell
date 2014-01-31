@@ -5,18 +5,18 @@ project.
 
 ## Installation
 
-Put `[lein-shell "0.3.0"]` into the `:plugins` vector of your `:user` profile
+Put `[lein-shell "0.4.0"]` into the `:plugins` vector of your `:user` profile
 inside `~/.lein/profiles.clj` if you want to use lein shell on a per user basis
 (this doesn't *really* make much sense, but you're allowed to if you want to!).
 
 To explicitly say that this project needs lein-shell to be built, putt
-`[lein-shell "0.3.0"]` into the `:plugins` vector of your `project.clj`. If you
+`[lein-shell "0.4.0"]` into the `:plugins` vector of your `project.clj`. If you
 have no `:plugins` vector in your `project.clj`, it should look like this:
 
 ```clj
 (defproject your-project-here "version"
  ...
- :plugins [[lein-shell "0.3.0"]]
+ :plugins [[lein-shell "0.4.0"]]
  ...)
 ```
 
