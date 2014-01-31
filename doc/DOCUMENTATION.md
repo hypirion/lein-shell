@@ -221,3 +221,6 @@ project.
 
 As may be evident, this replacement option is only possible for specific
 commands, and is not something you can set in general.
+
+The (currently) different detectable oses are `:freebsd`, `:linux`, `:macosx`,
+`:openbsd`, `:solaris` and `:windows`.
