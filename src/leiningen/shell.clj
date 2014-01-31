@@ -7,13 +7,16 @@
 (defmacro ^:private get-setting-fn
   "Returns a function which returns the highest priority setting when called
   with a project and a command. It is a macro because dynamic variables will get
-  caught and dereferenced if this was a function. :("
+  caught and dereferenced if this was a function. Will return falsey values."
   ([kw] `(get-setting-fn ~kw nil))
   ([kw default]
-     `(fn [project# [command# & args#]]
-        (or (get-in project# [:shell :commands command# ~kw])
-            (get-in project# [:shell ~kw])
-            ~default))))
+     `(let [gsym# (gensym "not-found")]
+        (fn [project# [command# & args#]]
+          (first
+           (remove #(= gsym# %)
+                   [(get-in project# [:shell :commands command# ~kw] gsym#)
+                    (get-in project# [:shell ~kw] gsym#)
+                    ~default]))))))
 
 (def ^:private get-environment
   (get-setting-fn :env eval/*env*))
@@ -23,6 +26,9 @@
 
 (def ^:private get-exit-code
   (get-setting-fn :exit-code :default))
+
+(def ^:private get-pipe-stdin?
+  (get-setting-fn :pipe-stdin? true))
 
 (defn- lookup-command
   "Looks up the first part of command, and replaces it with an os-specific
@@ -39,7 +45,8 @@
 
 (defn- shell-with-project [project cmd]
   (binding [eval/*dir* (get-directory project cmd)
-            eval/*env* (get-environment project cmd)]
+            eval/*env* (get-environment project cmd)
+            eval/*pump-in* (get-pipe-stdin? project cmd)]
     (let [cmd (lookup-command project cmd)]
       (main/debug "[shell] Calling the shell with" cmd)
       (apply eval/sh cmd))))
