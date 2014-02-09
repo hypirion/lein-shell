@@ -60,6 +60,8 @@ contains a lot of examples, some which hopefully are useful to you.
 
 ## License
 
-Copyright © 2013-2014 Jean Niklas L'orange
+Copyright © 2013-2014 Jean Niklas L'orange and [contributors][].
+
+[contributors]: https://github.com/hyPiRion/lein-shell/contributors
 
 Distributed under the Eclipse Public License, the same as Clojure.
