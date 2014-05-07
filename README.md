@@ -48,8 +48,8 @@ example, to automatically call `make` before running tasks, add this to your
 ```
 
 If the command exits with a nonzero exit code, shell will (attempt to) exit
-Leiningen with the same exit code. If wanted to, this functionality can be
-overridden, and many other settings can be modified as well.
+Leiningen with the same exit code. This functionality can be overridden if
+desired, and many other settings can be modified as well.
 
 ## Documentation
 
