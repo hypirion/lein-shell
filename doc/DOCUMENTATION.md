@@ -12,18 +12,18 @@ be configurable enough that such things can be done through modifications in the
 
 ## Installation
 
-Put `[lein-shell "0.4.0"]` into the `:plugins` vector of your `:user` profile
+Put `[lein-shell "0.4.1"]` into the `:plugins` vector of your `:user` profile
 inside `~/.lein/profiles.clj` if you want to use lein shell on a per user basis
 (this doesn't *really* make much sense, but you're allowed to if you want to!).
 
 To explicitly say that this project needs lein-shell to be built, putt
-`[lein-shell "0.4.0"]` into the `:plugins` vector of your `project.clj`. If you
+`[lein-shell "0.4.1"]` into the `:plugins` vector of your `project.clj`. If you
 have no `:plugins` vector in your `project.clj`, it should look like this:
 
 ```clj
 (defproject your-project-here "version"
  ...
- :plugins [[lein-shell "0.4.0"]]
+ :plugins [[lein-shell "0.4.1"]]
  ...)
 ```
 
@@ -68,7 +68,7 @@ uberjaring, testing and repl'ing, I can do this:
   :prep-tasks [["shell" "generator" "--in" "build/in.grammar"
                                     "--out" "src/out.clj"]
                "javac" "compile"]
-  :plugins [[lein-shell "0.4.0"]])
+  :plugins [[lein-shell "0.4.1"]])
 ```
 
 Now, the command `generator --in build/in.grammar --out src/out.clj` will always
@@ -102,7 +102,7 @@ that:
 ```clj
 (defproject package.name/project "0.1.0-SNAPSHOT"
   ...
-  :plugins [[lein-shell "0.4.0"]]
+  :plugins [[lein-shell "0.4.1"]]
   :aliases {"javadoc" ["shell" "javadoc" "-d" "javadoc"
                         "-sourcepath" "src/" "package.name"]
             "jar" ["do" "javadoc," "jar"]}}})

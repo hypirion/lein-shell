@@ -1,5 +1,10 @@
 # lein-shell changelog
 
+## 0.4.1 [`tag`][0.4.1-tag]
+
+* Custom `:shell :commands` can now be vectors instead of strings only, making
+  it act like Lein aliases.
+
 ## 0.4.0 [`tag`][0.4.0-tag]
 
 * By default, stdin is piped in to shell commands. You can now specify that
@@ -28,6 +33,7 @@
 
 * First release!
 
+[0.4.1-tag]: https://github.com/hyPiRion/lein-shell/tree/0.4.1
 [0.4.0-tag]: https://github.com/hyPiRion/lein-shell/tree/0.4.0
 [0.3.0-tag]: https://github.com/hyPiRion/lein-shell/tree/0.3.0
 [0.2.0-tag]: https://github.com/hyPiRion/lein-shell/tree/0.2.0
