@@ -38,10 +38,10 @@
         os (eval/get-os)]
     (if-let [os-cmd (or (get-in project [:shell :commands command os])
                         (get-in project [:shell :commands command :default-command]))]
-      (do
+      (let [normalized-cmd (if (string? os-cmd) [os-cmd] os-cmd)]
         (main/debug (format "[shell] Replacing command %s with %s. (os is %s)"
-                            command os-cmd os))
-        (cons os-cmd (rest cmd)))
+                            command normalized-cmd os))
+        (concat normalized-cmd (rest cmd)))
       cmd)))
 
 (defn- shell-with-project [project cmd]

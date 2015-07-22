@@ -222,6 +222,15 @@ project.
 As may be evident, this replacement option is only possible for specific
 commands, and is not something you can set in general.
 
+If you need to run several commands on one OS to achieve equivalent results
+on other platforms, then you can provide multiple commands in a vector:
+
+```clj
+(defproject ...
+  ...
+  :shell {:commands {"foo" {:windows ["bar" "baz" "bat"]}}})
+```
+
 The (currently) different detectable oses are `:freebsd`, `:linux`, `:macosx`,
 `:openbsd`, `:solaris` and `:windows`, but this may automatically increase with
 newer leiningen releases.
