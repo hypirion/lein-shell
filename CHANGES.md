@@ -1,9 +1,14 @@
 # lein-shell changelog
 
+## 0.4.2 [`tag`][0.4.2-tag]
+
+* Fixed a bug where lein-shell itself could not be used as a higher order alias
+  in certain scenarios.
+
 ## 0.4.1 [`tag`][0.4.1-tag]
 
-* Custom `:shell :commands` can now be vectors instead of strings only, making
-  it act like Lein aliases.
+* Custom `:shell :commands` can now be vectors instead of strings only, acting
+  more or less like Lein aliases.
 
 ## 0.4.0 [`tag`][0.4.0-tag]
 
@@ -33,6 +38,7 @@
 
 * First release!
 
+[0.4.2-tag]: https://github.com/hyPiRion/lein-shell/tree/0.4.2
 [0.4.1-tag]: https://github.com/hyPiRion/lein-shell/tree/0.4.1
 [0.4.0-tag]: https://github.com/hyPiRion/lein-shell/tree/0.4.0
 [0.3.0-tag]: https://github.com/hyPiRion/lein-shell/tree/0.3.0
