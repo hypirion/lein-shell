@@ -5,18 +5,18 @@ project.
 
 ## Installation
 
-Put `[lein-shell "0.4.1"]` into the `:plugins` vector of your `:user` profile
+Put `[lein-shell "0.4.2"]` into the `:plugins` vector of your `:user` profile
 inside `~/.lein/profiles.clj` if you want to use lein shell on a per user basis
 (this doesn't *really* make much sense, but you're allowed to if you want to!).
 
 To explicitly say that this project needs lein-shell to be built, putt
-`[lein-shell "0.4.1"]` into the `:plugins` vector of your `project.clj`. If you
+`[lein-shell "0.4.2"]` into the `:plugins` vector of your `project.clj`. If you
 have no `:plugins` vector in your `project.clj`, it should look like this:
 
 ```clj
 (defproject your-project-here "version"
  ...
- :plugins [[lein-shell "0.4.1"]]
+ :plugins [[lein-shell "0.4.2"]]
  ...)
 ```
 
@@ -60,7 +60,7 @@ contains a lot of examples, some which hopefully are useful to you.
 
 ## License
 
-Copyright © 2013-2014 Jean Niklas L'orange and [contributors][].
+Copyright © 2013-2015 Jean Niklas L'orange and [contributors][].
 
 [contributors]: https://github.com/hyPiRion/lein-shell/contributors
 
