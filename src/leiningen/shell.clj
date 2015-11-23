@@ -59,14 +59,11 @@ process returns a nonzero exit code, this command will force Leiningen to exit
 with the same exit code.
 
 Call through `lein shell cmd arg1 arg2 ... arg_n`."
-  [& args]
-  (let [[project cmd] (if ((some-fn map? nil?) (first args))
-                        [(first args) (rest args)]
-                        [nil args])]
-    (let [exit-code (shell-with-project project cmd)
-          exit-code-action (get-exit-code project cmd)]
-      (case exit-code-action
-        :ignore (main/debug (format "[shell] Ignoring exit code (is %d)"
-                                    exit-code))
-        :default (if-not (zero? exit-code)
-                   (main/exit exit-code))))))
+  [project & cmd]
+  (let [exit-code (shell-with-project project cmd)
+        exit-code-action (get-exit-code project cmd)]
+    (case exit-code-action
+      :ignore (main/debug (format "[shell] Ignoring exit code (is %d)"
+                                  exit-code))
+      :default (if-not (zero? exit-code)
+                 (main/exit exit-code)))))
