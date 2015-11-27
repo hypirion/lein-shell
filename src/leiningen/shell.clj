@@ -1,8 +1,25 @@
 (ns leiningen.shell
   (:require [clojure.java.io :as io]
+            [clojure.string :as s]
             [leiningen.core.eval :as eval]
             [leiningen.core.main :as main]
             [leiningen.core.utils :as utils]))
+
+(defn- replace-values
+  [project s]
+  (s/replace s #"\$\{.*?\}"
+             (fn [raw]
+               ;; Remove first 2 and last character
+               (let [val (read-string (subs raw 2 (dec (count raw))))]
+                 (if (vector? val)
+                   (str (get-in project val))
+                   (str (get project val)))))))
+
+(defn- param-expand
+  [project s]
+  (if-not (string? s)
+    s
+    (replace-values project s)))
 
 (defmacro ^:private get-setting-fn
   "Returns a function which returns the highest priority setting when called
@@ -60,7 +77,8 @@ with the same exit code.
 
 Call through `lein shell cmd arg1 arg2 ... arg_n`."
   [project & cmd]
-  (let [exit-code (shell-with-project project cmd)
+  (let [cmd (mapv #(param-expand project %) cmd)
+        exit-code (shell-with-project project cmd)
         exit-code-action (get-exit-code project cmd)]
     (case exit-code-action
       :ignore (main/debug (format "[shell] Ignoring exit code (is %d)"
