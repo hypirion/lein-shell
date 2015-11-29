@@ -1,5 +1,12 @@
 # lein-shell changelog
 
+## 0.5.0 [`tag`][0.5.0-tag]
+
+* Fixed a bug where non-string were not converted to strings before sent to the
+  command, causing NullPointerExceptions, cast errors and other problems.
+* Implemented parameter expansion. You can specify them on the form `${:foo}`
+  and on the form `${[:foo :bar]}`. They can also contain default strings.
+
 ## 0.4.2 [`tag`][0.4.2-tag]
 
 * Fixed a bug where lein-shell itself could not be used as a higher order alias
@@ -38,6 +45,7 @@
 
 * First release!
 
+[0.5.0-tag]: https://github.com/hyPiRion/lein-shell/tree/0.5.0
 [0.4.2-tag]: https://github.com/hyPiRion/lein-shell/tree/0.4.2
 [0.4.1-tag]: https://github.com/hyPiRion/lein-shell/tree/0.4.1
 [0.4.0-tag]: https://github.com/hyPiRion/lein-shell/tree/0.4.0
