@@ -12,18 +12,18 @@ be configurable enough that such things can be done through modifications in the
 
 ## Installation
 
-Put `[lein-shell "0.4.1"]` into the `:plugins` vector of your `:user` profile
+Put `[lein-shell "0.4.2"]` into the `:plugins` vector of your `:user` profile
 inside `~/.lein/profiles.clj` if you want to use lein shell on a per user basis
 (this doesn't *really* make much sense, but you're allowed to if you want to!).
 
 To explicitly say that this project needs lein-shell to be built, putt
-`[lein-shell "0.4.1"]` into the `:plugins` vector of your `project.clj`. If you
+`[lein-shell "0.4.2"]` into the `:plugins` vector of your `project.clj`. If you
 have no `:plugins` vector in your `project.clj`, it should look like this:
 
 ```clj
 (defproject your-project-here "version"
  ...
- :plugins [[lein-shell "0.4.1"]]
+ :plugins [[lein-shell "0.4.2"]]
  ...)
 ```
 
@@ -45,6 +45,64 @@ this:
 
 lein-shell doesn't need to be run inside a project, but it is usually the
 sensible place to use it.
+
+## Parameter Expansion
+
+As with common Unix shells, lein-shell supports variable/parameter expansion in
+arguments. Whenever lein-shell sees `${:foo}` in a string passed in, it will
+expand that to the value of the key `:foo` in the project map, if it exists. If
+you pass in a vector instead, such as `${[:foo :bar]}`, then the vector will be
+used as if used by `get-in` on the project map.
+
+As an example, this shell call will cause a cute bunny to print the information
+about the project (note the single quotes!):
+
+    lein shell cowsay -f bunny 'This is ${:name}, version ${:version}. It is licensed under the ${[:license :name]}'
+
+For lein shell 1.0.0-SNAPSHOT, this will print the following to your terminal:
+
+     ______________________________________
+    / This is lein-shell, version          \
+    | 1.0.0-SNAPSHOT. It is licensed under |
+    \ the Eclipse Public License           /
+     --------------------------------------
+      \
+       \   \
+            \ /\
+            ( )
+          .( o ).
+
+lein shell also allows you to specify a default string if the values do not
+exist. This is done by appending `:-` after the clojure value provided, then the
+default string, then the closing brace. As an example, many projects will print
+out the following when you run lein shell with this command:
+
+    lein shell echo '${:not-defined:-this value is not defined!}'
+    this value is not defined!
+
+Note that you can insert parameter expansions inside the default string. The
+following example will attempt to find :foo, then :bar, then :baz, then fall
+back to quux for charging some lasers:
+
+    lein shell echo 'Charging the lasers with ${:foo:-${:bar:-${:baz:-quux (:baz not available)} (:bar not available)} (:foo not available)}'
+    Charging the lasers with quux (:baz not available) (:bar not available) (:foo not available)
+
+If need be, you can escape the $ to avoid to treat it as a parameter expansion:
+
+    lein shell echo 'clojure.core\$apply.invoke is in the stacktrace'
+    clojure.core$apply.invoke is in the stacktrace
+
+If you specify this inside project.clj, remember to escape the escape character;
+the previous call would be equal to
+`["shell" "echo" "clojure.core\\$apply.invoke is in the stacktrace"]`.
+
+Note that parameter expansion is not implemented to support Clojure values that
+contain `}` or `:-` in them. This is to some extent intentional: If you need
+such complex expansion, then it seems better to have this in a plugin or as a
+separate value you expand. It is also not possible to expand environment
+variables. This is to avoid people from making accidental nonrepeatable builds.
+If you need access to environment variables, you can make a bash script that is
+called with lein-shell instead.
 
 ## (Example) Usage
 
@@ -237,7 +295,7 @@ newer leiningen releases.
 
 ### Default-command and aliasing
 
-In addition to the the OS-specific subprocess commands, you can also use
+In addition to the OS-specific subprocess commands, you can also use
 `:default-command` as a catch-all. This may seem pointless, as you can just
 change the default command call instead. However, this functionality makes it
 possible to make aliases for a single command.
