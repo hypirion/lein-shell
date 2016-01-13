@@ -23,7 +23,7 @@ have no `:plugins` vector in your `project.clj`, it should look like this:
 ```clj
 (defproject your-project-here "version"
  ...
- :plugins [[lein-shell "0.4.2"]]
+ :plugins [[lein-shell "0.5.0"]]
  ...)
 ```
 
@@ -126,7 +126,7 @@ uberjaring, testing and repl'ing, I can do this:
   :prep-tasks [["shell" "generator" "--in" "build/in.grammar"
                                     "--out" "src/out.clj"]
                "javac" "compile"]
-  :plugins [[lein-shell "0.4.1"]])
+  :plugins [[lein-shell "0.5.0"]])
 ```
 
 Now, the command `generator --in build/in.grammar --out src/out.clj` will always
@@ -160,7 +160,7 @@ that:
 ```clj
 (defproject package.name/project "0.1.0-SNAPSHOT"
   ...
-  :plugins [[lein-shell "0.4.1"]]
+  :plugins [[lein-shell "0.5.0"]]
   :aliases {"javadoc" ["shell" "javadoc" "-d" "javadoc"
                         "-sourcepath" "src/" "package.name"]
             "jar" ["do" "javadoc," "jar"]}}})
