@@ -99,10 +99,18 @@ the previous call would be equal to
 Note that parameter expansion is not implemented to support Clojure values that
 contain `}` or `:-` in them. This is to some extent intentional: If you need
 such complex expansion, then it seems better to have this in a plugin or as a
-separate value you expand. It is also not possible to expand environment
-variables. This is to avoid people from making accidental nonrepeatable builds.
-If you need access to environment variables, you can make a bash script that is
-called with lein-shell instead.
+separate value you expand. 
+
+It is also not possible to expand environment variables. This is to avoid people from making accidental nonrepeatable builds.  If you need access to environment variables, you can make a bash script that is
+called with lein-shell instead. Alternatively, you could do something like this:
+```clj
+(def java-home (System/getenv "JAVA_HOME"))
+(defproject some-project "some-version"
+  [...]
+  :java-home ~java-home
+  [...] 
+  ["shell" "${:java-home}/bin/jlink" ]
+```
 
 ## (Example) Usage
 
